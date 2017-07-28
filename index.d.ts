@@ -7,6 +7,7 @@ interface ChartComponentProps {
 	legend? :Object;
 	onElementsClick? :Function;
 	options? :Object;
+	plugins? :Object;
 	redraw? :boolean;
 	type? :String;
 	width? :number;
