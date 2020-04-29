@@ -1,7 +1,9 @@
-[![build status](	https://img.shields.io/travis/gor181/react-chartjs-2.svg?branch=master&style=flat-square)](https://travis-ci.org/gor181/react-chartjs-2)
+[![build status](	https://img.shields.io/travis/jerairrest/react-chartjs-2.svg?branch=master&style=flat-square)](https://travis-ci.org/jerairrest/react-chartjs-2)
 [![version](https://img.shields.io/npm/v/react-chartjs-2.svg?style=flat-square)](https://www.npmjs.com/package/react-chartjs-2)
 [![downloads](https://img.shields.io/npm/dm/react-chartjs-2.svg?style=flat-square)](https://npm-stat.com/charts.html?package=react-chartjs-2&from=2016-01-01)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](http://opensource.org/licenses/MIT)
+
+### Looking for maintainers!!
 
 # react-chartjs-2
 
@@ -9,15 +11,11 @@ React wrapper for [Chart.js 2](http://www.chartjs.org/docs/#getting-started)
 Open for PRs and contributions!
 
 # UPDATE to 2.x
-As of 2.x we have made chart.js a peer dependency for greater flexibility. Please add chart.js as a dependency on your project to use 2.x. Currently, 2.4.x is the recommended version of chart.js to use.
-
-# Looking for Contributors!
-Actively looking for contributors as for the moment I do not have enough time to dedicate for maintaining this lib.
-All contributors can add themselves to Contributors section at the bottom of README.
+As of 2.x we have made chart.js a peer dependency for greater flexibility. Please add chart.js as a dependency on your project to use 2.x. Currently, 2.5.x is the recommended version of chart.js to use.
 
 ## Demo & Examples
 
-Live demo: [gor181.github.io/react-chartjs-2](http://gor181.github.io/react-chartjs-2/)
+Live demo: [jerairrest.github.io/react-chartjs-2](http://jerairrest.github.io/react-chartjs-2/)
 
 To build the examples locally, run:
 
@@ -43,7 +41,7 @@ Then open [`localhost:6006`](http://localhost:6006) in a browser.
 ## Installation via NPM
 
 ```bash
-npm install react-chartjs-2 chart.js --save
+npm install --save react-chartjs-2 chart.js
 ```
 
 
@@ -52,7 +50,7 @@ npm install react-chartjs-2 chart.js --save
 Check example/src/components/* for usage.
 
 ```js
-import {Doughnut} from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2';
 
 <Doughnut data={...} />
 ```
@@ -62,6 +60,7 @@ import {Doughnut} from 'react-chartjs-2';
 * data: (PropTypes.object | PropTypes.func).isRequired,
 * width: PropTypes.number,
 * height: PropTypes.number,
+* id: PropTypes.string,
 * legend: PropTypes.object,
 * options: PropTypes.object,
 * redraw: PropTypes.bool,
@@ -75,12 +74,10 @@ In order for Chart.js to obey the custom size you need to set `maintainAspectRat
 
 ```js
 <Bar
-	data={data}
-	width={100}
-	height={50}
-	options={{
-		maintainAspectRatio: false
-	}}
+  data={data}
+  width={100}
+  height={50}
+  options={{ maintainAspectRatio: false }}
 />
 ```
 
@@ -88,13 +85,19 @@ In order for Chart.js to obey the custom size you need to set `maintainAspectRat
 Chart.js instance can be accessed by placing a ref to the element as:
 
 ```js
-render() {
-	componentDidMount() {
-		console.log(this.refs.chart.chart_instance); // returns a Chart.js instance reference
-	}
-	return (
-		<Doughnut ref='chart' data={data} />
-	)
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.chartReference = React.createRef();
+  }
+
+  componentDidMount() {
+    console.log(this.chartReference); // returns a Chart.js instance reference
+  }
+
+  render() {
+    return (<Doughnut ref={this.chartReference} data={data} options={options} />)
+  }
 }
 ```
 
@@ -106,20 +109,18 @@ This approach is useful when you want to keep your components pure.
 
 ```js
 render() {
-	const data = (canvas) => {
-		const ctx = canvas.getContext("2d")
-		const gradient = ctx.createLinearGradient(0,0,100,0);
-		...
-		return {
-			...
-			backgroundColor: gradient
-			...
-		}
-	}
+  const data = (canvas) => {
+    const ctx = canvas.getContext("2d")
+    const gradient = ctx.createLinearGradient(0,0,100,0);
+    ...
+    return {
+      ...
+      backgroundColor: gradient
+      ...
+    }
+  }
 
-	return (
-		<Line data={data} />
-	)
+  return (<Line data={data} />)
 }
 ```
 
@@ -142,12 +143,12 @@ import merge from 'lodash.merge';
 // import { merge } from 'lodash';
 
 merge(defaults, {
-	global: {
-  		animation: false,
-		line: {
-			borderColor: '#F85F73',
-		},
-	},
+  global: {
+    animation: false,
+    line: {
+      borderColor: '#F85F73',
+     },
+  },
 });
 ```
 
@@ -159,11 +160,11 @@ You can access the internal Chart.js object to register plugins or extend charts
 import { Chart } from 'react-chartjs-2';
 
 componentWillMount() {
-	Chart.pluginService.register({
-		afterDraw: function (chart, easing) {
-			// Plugin code.
-		}
-	});
+  Chart.pluginService.register({
+    afterDraw: function (chart, easing) {
+      // Plugin code.
+    }
+  });
 }
 ```
 
@@ -179,9 +180,9 @@ A function to be called when mouse clicked on chart elememts, will return all el
 
 ```js
 {
-	onElementsClick: (elems) => {},
-	getElementsAtEvent: (elems) => {},
-	// `elems` is an array of chartElements
+  onElementsClick: (elems) => {},
+  getElementsAtEvent: (elems) => {},
+  // `elems` is an array of chartElements
 }
 
 ```
@@ -191,7 +192,7 @@ Calling getElementAtEvent(event) on your Chart instance passing an argument of a
 
 ```js
 {
-	getElementAtEvent: (elems) => {},
+  getElementAtEvent: (elems) => {},
   // => returns the first element at the event point.
 }
 ```
@@ -202,8 +203,8 @@ Looks for the element under the event point, then returns all elements from that
 
 ```js
 {
-	getDatasetAtEvent: (dataset) => {}
-	// `dataset` is an array of chartElements
+  getDatasetAtEvent: (dataset) => {}
+  // `dataset` is an array of chartElements
 }
 ```
 
@@ -220,14 +221,9 @@ You will find that any event which causes the chart to re-render, such as hover 
 
 To build, watch and serve the examples (which will also watch the component source), run `npm start`. If you just want to watch changes to `src` and rebuild `lib`, run `npm run watch` (this is useful if you are working with `npm link`).
 
-## Thanks
-
-Jed Watson for making react-component yo builder!
 
 ## License
 
-MIT Licensed
-Copyright (c) 2016 Goran Udosic
+[MIT Licensed](/LICENSE.md)
+Copyright (c) 2017 Jeremy Ayerst
 
-## Contributors
-Jeremy Ayerst [@jerairrest](https://github.com/jerairrest)
